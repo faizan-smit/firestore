@@ -92,7 +92,21 @@
 
 
 
-                const docRef = await addDoc(
+                //authentication
+
+                let my_flag = false;
+
+                querySnapshot.forEach(async (daa) => {
+
+                    if(daa.data().bookName == bookName){
+                        my_flag = true;
+                    }
+
+                });
+
+                if (!my_flag){
+                    
+                    const docRef = await addDoc(
                     collection(db, "books"),
                     {
                         bookName: bookName,
@@ -101,6 +115,26 @@
                     });
                 console.log("Document written with ID: ", docRef.id);
                 window.location.reload();
+
+                }else{
+                    alert("Book already exist")
+                }
+
+
+
+                //end authentication
+
+
+
+                // const docRef = await addDoc(
+                //     collection(db, "books"),
+                //     {
+                //         bookName: bookName,
+                //         bookAuthor: bookAuthor,
+                //         bookGenre: bookGenre
+                //     });
+                // console.log("Document written with ID: ", docRef.id);
+                // window.location.reload();
                 
 
                 //TO Add Items Immideatly 
