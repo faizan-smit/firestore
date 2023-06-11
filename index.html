@@ -198,9 +198,13 @@
             let bookGenre1 = document.createTextNode(doc.data().bookGenre)
             let nameSpacer = document.createTextNode("  -  ")
             let deleteButton = document.createElement('button')
+            let updateButton = document.createElement('button')
+            updateButton.setAttribute('class', 'updtButton')
             deleteButton.setAttribute('type', 'submit')
+            updateButton.setAttribute('type', 'submit')
             deleteButton.setAttribute('class', 'delButton')
             deleteButton.innerHTML= "Delete"
+            updateButton.innerHTML = "Update Book Info"
             myPara.appendChild(bookAuthor1)
             myPara.appendChild(nameSpacer)
             myPara.appendChild(bookGenre1)
@@ -209,6 +213,7 @@
             cardDiv.appendChild(myH3)
             cardDiv.appendChild(myPara)
             cardDiv.appendChild(deleteButton)
+            cardDiv.appendChild(updateButton)
             mainDiv.appendChild(cardDiv)
 
             // for (const prop in doc) {
@@ -247,6 +252,53 @@
 
 
                         console.log("Book Deleted : ", forDeleteBookName)
+
+                        location.reload();
+
+
+
+                    }
+
+
+
+                });
+
+                });
+
+            })
+
+
+            //update data
+
+            let uBut = document.querySelectorAll('.updtButton')
+            uBut.forEach(x=>{
+                x.addEventListener("click", event=>{
+                console.log(event)
+                console.log(event.target.parentNode.firstChild.innerHTML)
+
+                let newBookName = prompt("Please enter new Book Name: ", "Mein Kampf")
+                let newBookAuthor = prompt("Please enter new Book Name: ", "Adolf Hitler")
+                let newBookGenre = prompt("Please enter new Book Name: ", "Autobiography")
+
+
+                let forUpdateBookName = event.target.parentNode.firstChild.innerHTML
+
+                querySnapshot.forEach(async (daa) => {
+
+                    if(daa.data().bookName == forUpdateBookName){
+
+                        let updateBookInfo = daa.id
+                        const bookRef = doc(db, 'books', updateBookInfo);
+                        await updateDoc(bookRef, {
+                            bookName: newBookName,
+                            bookAuthor: newBookAuthor,
+                            bookGenre: newBookGenre
+                        });
+
+                        
+
+
+                        console.log("Book Updated : ", forUpdateBookName)
 
                         location.reload();
 
