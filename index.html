@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #bookDisplayGrid {
+            display: flex;
+            gap: 1em;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        #bookDisplayGrid .bookTile {
+            border: 1px solid black;
+            padding: 1em;
+            border-radius: 0.5rem;
+            min-width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="bookAddForm">
+        <label for="bookName"> Book Name: </label>
+        <input type="text" id="bookName">
+        <br>
+        <label for="bookAuthor"> Book Author Name: </label>
+        <input type="text" id="bookAuthor">
+
+        <br>
+        <label for="bookGenre"> Book Genre: </label>
+        <input type="text" id="bookGenre">
+
+        <br>
+        <button type="submit">Add Book to Database</button>
+    </form>
+
+
+    <div id="bookDisplayGrid">
+        <!-- <div class="bookTile">
+            <h3>Book Name</h3>
+            <p>book Author - book Genre </p>
+        </div>
+        <div class="bookTile">
+            <h3>Book Name</h3>
+            <p>book Author - book Genre </p>
+        </div>
+        <div class="bookTile">
+            <h3>Book Name</h3>
+            <p>book Author - book Genre </p>
+        </div> -->
+    </div>
+
+    <script type="module">
+        import { initializeApp,  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { collection, addDoc, getFirestore, getDocs, doc, updateDoc, deleteField, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        
+        
+                const firebaseConfig = {
+
+                    apiKey: "AIzaSyBGoTgLb9GRw5JhSfc0vN5P1uSjCONePBc",
+                    authDomain: "datareadwritesirinzamam.firebaseapp.com",
+                    projectId: "datareadwritesirinzamam",
+                    storageBucket: "datareadwritesirinzamam.appspot.com",
+                    messagingSenderId: "308434612152",
+                    appId: "1:308434612152:web:cf5530c63a2f34540ce94d",
+                    measurementId: "G-MES7QY6ZN5"
+
+                };
+
+
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const querySnapshot = await getDocs(collection(db, "books"));
+
+
+        document.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            let bookName = document.querySelector("#bookName").value;
+            let bookAuthor = document.querySelector("#bookAuthor").value;
+            let bookGenre = document.querySelector("#bookGenre").value;
+
+            try {
+
+
+
+                const docRef = await addDoc(
+                    collection(db, "books"),
+                    {
+                        bookName: bookName,
+                        bookAuthor: bookAuthor,
+                        bookGenre: bookGenre
+                    });
+                console.log("Document written with ID: ", docRef.id);
+                window.location.reload();
+                
+
+                //TO Add Items Immideatly 
+
+                        // document.getElementById("bookDisplayGrid").innerHTML = ""
+                        // querySnapshot.forEach((doc) => {
+                        // let mainDiv = document.getElementById("bookDisplayGrid")
+                        // let cardDiv = document.createElement('div');
+                        // let myH3 = document.createElement('h3');
+                        // let myPara = document.createElement('p');
+                        // let bookName1 = document.createTextNode(doc.data()['bookName'])
+                        // let bookAuthor1 = document.createTextNode(doc.data()['bookAuthor'])
+                        // let bookGenre1 = document.createTextNode(doc.data()['bookGenre'])
+                        // let nameSpacer = document.createTextNode("  -  ")
+                        // let deleteButton = document.createElement('button')
+                        // deleteButton.setAttribute('type', 'submit')
+                        // deleteButton.setAttribute('class', 'delButton')
+                        // deleteButton.innerHTML= "Delete"
+                        // myPara.appendChild(bookAuthor1)
+                        // myPara.appendChild(nameSpacer)
+                        // myPara.appendChild(bookGenre1)
+                        // myH3.appendChild(bookName1)
+                        // cardDiv.className = "bookTile"
+                        // cardDiv.appendChild(myH3)
+                        // cardDiv.appendChild(myPara)
+                        // cardDiv.appendChild(deleteButton);
+                        // mainDiv.appendChild(cardDiv)
+
+
+
+                        // });
+
+
+
+                //end of add Items
+
+                
+
+
+
+                
+
+
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+
+        })
+
+        
+        // console.log(querySnapshot)
+            querySnapshot.forEach((doc) => {
+            console.log(`${doc.id} => ${doc.data()} and the object is ${doc.data().bookAuthor} ${doc.data().bookGenre} ${doc.data().bookName}` );
+
+            let mainDiv = document.getElementById("bookDisplayGrid")
+            let cardDiv = document.createElement('div');
+            let myH3 = document.createElement('h3');
+            let myPara = document.createElement('p');
+            let bookName1 = document.createTextNode(doc.data().bookName)
+            let bookAuthor1 = document.createTextNode(doc.data().bookAuthor)
+            let bookGenre1 = document.createTextNode(doc.data().bookGenre)
+            let nameSpacer = document.createTextNode("  -  ")
+            let deleteButton = document.createElement('button')
+            deleteButton.setAttribute('type', 'submit')
+            deleteButton.setAttribute('class', 'delButton')
+            deleteButton.innerHTML= "Delete"
+            myPara.appendChild(bookAuthor1)
+            myPara.appendChild(nameSpacer)
+            myPara.appendChild(bookGenre1)
+            myH3.appendChild(bookName1)
+            cardDiv.className = "bookTile"
+            cardDiv.appendChild(myH3)
+            cardDiv.appendChild(myPara)
+            cardDiv.appendChild(deleteButton)
+            mainDiv.appendChild(cardDiv)
+
+            // for (const prop in doc) {
+            // console.log(`doc.${prop} = ${doc[prop]}`);
+            // }
+            
+
+
+
+            });
+
+
+
+            //delete
+
+
+            
+            
+
+            // const bookRef = doc(db, 'books');
+            let dBut = document.querySelectorAll('.delButton')
+            dBut.forEach(x=>{
+                x.addEventListener("click", event=>{
+                console.log(event)
+                console.log(event.target.parentNode.firstChild.innerHTML)
+
+                let forDeleteBookName = event.target.parentNode.firstChild.innerHTML
+
+                querySnapshot.forEach(async (daa) => {
+
+                    if(daa.data().bookName == forDeleteBookName){
+
+                        let delBookInfo = daa.id
+
+                        await deleteDoc(doc(db, "books", delBookInfo));
+
+
+                        console.log("Book Deleted : ", forDeleteBookName)
+
+                        location.reload();
+
+
+
+                    }
+
+
+
+                });
+
+                });
+
+            })
+            
+        
+
+            
+
+
+    </script>
+
+    
+</body>
+
+</html>
